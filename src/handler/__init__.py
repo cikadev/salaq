@@ -196,6 +196,10 @@ def delete_from_trolley_API():
         "success": True,
     })
 
+@app.route('/api/3d')
+def upload3d_API():
+    return render_template("upload.html", title="Upload")
+
 @app.route('/404')
 def not_found():
     return "404"
