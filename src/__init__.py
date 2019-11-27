@@ -4,34 +4,13 @@ from flask_sqlalchemy import SQLAlchemy
 import sqlalchemy
 import json
 
+import models
+
 # Initializing Flask
 app = Flask(__name__)
 app.secret_key = "Cikadev"
 app.config['SQLALCHEMY_DATABASE_URI'] = "postgres://postgres:123@localhost:5432/bojonegoro"
 db = SQLAlchemy(app)
-
-
-class Users(flask_login.UserMixin, db.Model):
-    __tablename__ = 'users'
-    email = db.Column(db.String, primary_key=True)
-    password = db.Column(db.String)
-    name = db.Column(db.String)
-
-    def create(self):
-        db.session.add(self)
-        db.session.commit()
-
-    def get_id(self):
-        return self.email
-
-    @staticmethod
-    def where_email(email):
-        return Users.query.filter_by(email=email).first()
-
-    @staticmethod
-    def where_email_password(email, password):
-        return Users.query.filter_by(email=email, password=password).first()
-
 
 # Authentication
 login_manager = flask_login.LoginManager()
@@ -41,7 +20,7 @@ login_manager.init_app(app)
 @login_manager.user_loader
 def load_user(email):
     if email is not None:
-        return Users.where_email(email)
+        return models.Users.where_email(email)
     return None
 
 
