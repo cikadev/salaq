@@ -61,10 +61,9 @@ def me():
 def signup_API():
     email = request.form['email']
     password = request.form['password']
+    name = request.form['name']
 
-    user_temp = Users()
-    user_temp.email = email
-    user_temp.password = password
+    user_temp = Users(email=email, name=name, password=password)
     success = True
 
     try:
