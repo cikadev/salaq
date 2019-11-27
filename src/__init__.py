@@ -13,3 +13,5 @@ db = SQLAlchemy(app)
 # Initializing authentication
 login_manager = flask_login.LoginManager()
 login_manager.init_app(app)
+
+import src.handler
