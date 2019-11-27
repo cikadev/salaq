@@ -397,6 +397,64 @@ ALTER SEQUENCE public.transaction_product_id_seq OWNED BY public.transaction.pro
 
 
 --
+-- Name: trolley; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.trolley (
+    user_email character varying NOT NULL,
+    id integer NOT NULL,
+    product_id integer NOT NULL,
+    quantity integer
+);
+
+
+ALTER TABLE public.trolley OWNER TO postgres;
+
+--
+-- Name: trolley_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.trolley_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.trolley_id_seq OWNER TO postgres;
+
+--
+-- Name: trolley_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.trolley_id_seq OWNED BY public.trolley.id;
+
+
+--
+-- Name: trolley_product_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.trolley_product_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.trolley_product_id_seq OWNER TO postgres;
+
+--
+-- Name: trolley_product_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.trolley_product_id_seq OWNED BY public.trolley.product_id;
+
+
+--
 -- Name: users; Type: TABLE; Schema: public; Owner: postgres
 --
 
@@ -495,6 +553,20 @@ ALTER TABLE ONLY public.transaction ALTER COLUMN product_id SET DEFAULT nextval(
 
 
 --
+-- Name: trolley id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.trolley ALTER COLUMN id SET DEFAULT nextval('public.trolley_id_seq'::regclass);
+
+
+--
+-- Name: trolley product_id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.trolley ALTER COLUMN product_id SET DEFAULT nextval('public.trolley_product_id_seq'::regclass);
+
+
+--
 -- Data for Name: discussion; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
@@ -515,6 +587,9 @@ COPY public.line (id, user_email, date, ship_address, postal_code, note, courrie
 --
 
 COPY public.media (id, type, url, product_id) FROM stdin;
+1	3d	1/gltf/scene.gltf	1
+2	image	1.jpg	1
+3	image	2.webp	1
 \.
 
 
@@ -554,6 +629,15 @@ COPY public.transaction (line_id, product_id) FROM stdin;
 
 
 --
+-- Data for Name: trolley; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.trolley (user_email, id, product_id, quantity) FROM stdin;
+andra.antariksa@gmail.com	2	1	5
+\.
+
+
+--
 -- Data for Name: users; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
@@ -561,6 +645,7 @@ COPY public.users (email, password, name, balance) FROM stdin;
 andra.antariksa@gmail.com	andra123		0
 andra.antariksa.cool@gmail.com	andra123		0
 andra.antariksa2@gmail.com	andra123	\N	0
+harwel@harwel.com	123	Harwel	0
 \.
 
 
@@ -589,14 +674,14 @@ SELECT pg_catalog.setval('public.line_id_seq', 1, false);
 -- Name: media_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.media_id_seq', 1, false);
+SELECT pg_catalog.setval('public.media_id_seq', 3, true);
 
 
 --
 -- Name: media_product_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.media_product_id_seq', 1, false);
+SELECT pg_catalog.setval('public.media_product_id_seq', 1, true);
 
 
 --
@@ -649,6 +734,20 @@ SELECT pg_catalog.setval('public.transaction_product_id_seq', 1, false);
 
 
 --
+-- Name: trolley_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.trolley_id_seq', 2, true);
+
+
+--
+-- Name: trolley_product_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.trolley_product_id_seq', 1, false);
+
+
+--
 -- Name: discussion discussion_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -686,6 +785,14 @@ ALTER TABLE ONLY public.product
 
 ALTER TABLE ONLY public.shop
     ADD CONSTRAINT shop_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: trolley trolley_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.trolley
+    ADD CONSTRAINT trolley_pkey PRIMARY KEY (id);
 
 
 --
@@ -751,6 +858,14 @@ ALTER TABLE ONLY public.discussion
 
 
 --
+-- Name: trolley product_id; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.trolley
+    ADD CONSTRAINT product_id FOREIGN KEY (product_id) REFERENCES public.product(id);
+
+
+--
 -- Name: shop shop_fkey_user_email; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -772,6 +887,14 @@ ALTER TABLE ONLY public.line
 
 ALTER TABLE ONLY public.product
     ADD CONSTRAINT shop_id FOREIGN KEY (shop_id) REFERENCES public.shop(id);
+
+
+--
+-- Name: trolley user_email; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.trolley
+    ADD CONSTRAINT user_email FOREIGN KEY (user_email) REFERENCES public.users(email);
 
 
 --

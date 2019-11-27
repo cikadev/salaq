@@ -198,7 +198,12 @@ def delete_from_trolley_API():
 
 @app.route('/api/3d')
 def upload3d_API():
-    return render_template("upload.html", title="Upload")
+    return "ok"
+
+@app.route('/@<shop_id>/product/add')
+def add_product(shop_id):
+    current_user = flask_login.current_user
+    return render_template("addproduct.html", title="Add Product", current_user=current_user)
 
 @app.route('/404')
 def not_found():
