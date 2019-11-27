@@ -2,6 +2,9 @@
 {% block body %}
     <div class="container">
         <h2 class="is-size-2">{{ shop.name }}</h2>
+        {% if is_mine %}
+            <a href="/@{{ shop.id }}/product/add" class="button">Add product</a>
+        {% endif %}
         <div class="columns">
             {% for product, product_thumbnail in product_list_and_media %}
                 <div class="column is-4">

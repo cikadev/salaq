@@ -1,0 +1,73 @@
+{% extends "layout.html" %}
+{% block body %}
+<container>
+    <div class="columns is-centered">
+        <div class="column is-half">
+            <div class="field">
+                <label class="label">Name</label>
+                <div class="control">
+                    <input class="input" id="field-name" type="text" placeholder="Name">
+                </div>
+            </div>
+            <div class="field">
+                <label class="label">Business Legality ID</label>
+                <div class="control">
+                    <input class="input" id="field-business-legality-id" type="text" placeholder="Business Legality ID">
+                </div>
+            </div>
+            <div class="field">
+                <label class="label">Office Address</label>
+                <div class="control">
+                    <textarea class="textarea" id="field-office-address" placeholder="Office Address"></textarea>
+                </div>
+            </div>
+            <div class="field">
+                <label class="label">Office Phone Number</label>
+                <div class="control">
+                    <input class="input" id="field-office-phone" type="text" placeholder="Office Phone Number">
+                </div>
+            </div>
+            <div class="field">
+                <label class="label">Website</label>
+                <div class="control">
+                    <input class="input" id="field-website" type="text" placeholder="Website">
+                </div>
+            </div>
+            <div class="field is-grouped">
+                <div class="control">
+                  <button class="button is-link" id="button-createshop">Create</button>
+                </div>
+            </div>
+        </div>
+        <script type="text/javascript">
+            function objectToURLEncode(string) {
+                return Object.entries(string).map(([k, v]) => `${encodeURIComponent(k)}=${encodeURIComponent(v)}`).join('&');
+            }
+
+            document.querySelector("#button-createshop").addEventListener("click", () => {
+                fetch("/api/createshop", {
+                    method: "POST",
+                    headers: {
+                      'Content-Type': 'application/x-www-form-urlencoded'
+                    },
+                    body: objectToURLEncode({
+                        name: document.querySelector("#field-name").value,
+                        business_legality_id: document.querySelector("#field-business-legality-id").value,
+                        office_address: document.querySelector("#field-office-address").value,
+                        office_phone: document.querySelector("#field-office-phone").value,
+                        website: document.querySelector("#field-website").value,
+                    }),
+                })
+                .then((data) => data.json())
+                .then((decoded_data) => {
+                    if (decoded_data.success === true) {
+                        window.location.replace("/");
+                    } else {
+                        alert("Error happened");
+                    }
+                })
+            });
+        </script>
+    </div>
+</container>
+{% endblock %}

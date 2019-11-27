@@ -40,7 +40,8 @@ def home():
         return product, image_url
 
     product_list_and_media = map(add_image, product_list)
-    return render_template("home.html", title="Home", product_list_and_media=product_list_and_media, current_user=current_user)
+    return render_template("home.html", title="Home", product_list_and_media=product_list_and_media,
+                           current_user=current_user)
 
 
 @app.route('/logout')
@@ -124,6 +125,8 @@ def product(shop_id, product_id):
 
 @app.route('/@<shop_id>')
 def shop(shop_id):
+    current_user = flask_login.current_user
+
     shop = Shop.where_id(shop_id)
     if shop is None:
         return redirect(url_for("not_found"))
@@ -140,7 +143,14 @@ def shop(shop_id):
 
     product_list_and_media = map(add_image, product_list)
 
-    return render_template("shop.html", title="Shop", shop=shop, product_list_and_media=product_list_and_media)
+    try:
+        is_mine = current_user.email == shop.user_email
+    except Exception:
+        is_mine = False
+
+    return render_template("shop.html", title="Shop", shop=shop, product_list_and_media=product_list_and_media,
+                           is_mine=is_mine)
+
 
 @app.route('/api/me/trolley')
 @flask_login.login_required
@@ -157,6 +167,7 @@ def me_trolley_API():
     return json.dumps({
         "trolley": list(map(add_product_name, Trolley.where_user_email(current_user.email))),
     })
+
 
 @app.route('/api/me/trolley', methods=["POST"])
 @flask_login.login_required
@@ -181,6 +192,7 @@ def add_to_trolley_API():
         "success": True,
     })
 
+
 @app.route('/api/me/trolley', methods=["DELETE"])
 @flask_login.login_required
 def delete_from_trolley_API():
@@ -196,14 +208,46 @@ def delete_from_trolley_API():
         "success": True,
     })
 
-@app.route('/api/3d')
-def upload3d_API():
-    return "ok"
+
+@app.route("/shop/create")
+def shop_create():
+    current_user = flask_login.current_user
+    return render_template("createshop.html", title="Create Shop", current_user=current_user)
+
+
+@app.route('/api/createshop', methods=["POST"])
+def createshop_API():
+    current_user = flask_login.current_user
+
+    name = request.form['name']
+    business_legality_id = request.form['business_legality_id']
+    office_address = request.form['office_address']
+    office_phone = request.form['office_phone']
+    website = request.form['website']
+    shop_temp = Shop()
+    shop_temp.name = name
+    shop_temp.business_legality_id = business_legality_id
+    shop_temp.office_address = office_address
+    shop_temp.office_phone = office_phone
+    shop_temp.website = website
+    shop_temp.user_email = current_user.email
+    shop_temp.create()
+    return json.dumps({
+        "success": True,
+    })
+
 
 @app.route('/@<shop_id>/product/add')
+@flask_login.login_required
 def add_product(shop_id):
-    current_user = flask_login.current_user
+    try:
+        current_user = flask_login.current_user
+        if shop_id != str(current_user.shop.id):
+            return redirect(url_for("not_found"))
+    except AttributeError:  # If user doesnt have any shop
+        return redirect(url_for("not_found"))
     return render_template("addproduct.html", title="Add Product", current_user=current_user)
+
 
 @app.route('/404')
 def not_found():

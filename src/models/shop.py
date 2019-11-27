@@ -7,6 +7,10 @@ class Shop(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String)
     user_email = db.Column(db.String)
+    business_legality_id = db.Column(db.String)
+    office_address = db.Column(db.String)
+    website = db.Column(db.String)
+    office_phone = db.Column(db.String)
     shop = None
 
     def create(self):

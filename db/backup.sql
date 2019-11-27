@@ -312,7 +312,11 @@ ALTER SEQUENCE public.reply_parent_discussion_id_seq OWNED BY public.reply.paren
 CREATE TABLE public.shop (
     user_email character varying NOT NULL,
     name character varying NOT NULL,
-    id integer NOT NULL
+    id integer NOT NULL,
+    business_legality_id character varying,
+    office_address text,
+    office_phone character varying,
+    website character varying
 );
 
 
@@ -615,8 +619,9 @@ COPY public.reply (parent_discussion_id, children_discussion_id) FROM stdin;
 -- Data for Name: shop; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-COPY public.shop (user_email, name, id) FROM stdin;
-andra.antariksa@gmail.com	Andra Shop	1
+COPY public.shop (user_email, name, id, business_legality_id, office_address, office_phone, website) FROM stdin;
+andra.antariksa@gmail.com	Andra Shop	1	\N	\N	\N	\N
+harwel@harwel.com	Harwel Shop	4	123	Test	14045	harwel.com
 \.
 
 
@@ -716,7 +721,7 @@ SELECT pg_catalog.setval('public.reply_parent_discussion_id_seq', 1, false);
 -- Name: shop_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.shop_id_seq', 1, true);
+SELECT pg_catalog.setval('public.shop_id_seq', 4, true);
 
 
 --
