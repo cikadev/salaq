@@ -1,14 +1,169 @@
 {% extends "layout.html" %}
 {% block body %}
     <container>
+
+        <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.js"></script>
+        <script nomodule src="https://unpkg.com/@google/model-viewer/dist/model-viewer-legacy.js"></script>
+        <!-- Use it like any other HTML element -->
+
+        <link rel="stylesheet" type="text/css" href="/static/vendor/slick/slick.css"/>
+        <link rel="stylesheet" type="text/css" href="/static/vendor/slick/slick-theme.css"/>
+        <script type="text/javascript" src="/static/vendor/slick/slick.min.js"></script>
+
         <div class="columns">
-            <div class="column is-two-thirds">
-                Media
+            <div class="column is-half" style="padding: 50px;">
+                <nav class="panel">
+                  <p class="panel-tabs">
+                      {% if media_3d != [] %}
+                    <a class="is-active" id="media-3d">3D Object</a>
+                      {% endif %}
+                      {% if media_images != [] %}
+                    <a id="media-images">Images</a>
+                      {% endif %}
+                  </p>
+                    <div id="view-media-3d" style="width:100%; height: auto;">
+                        <model-viewer src="/dynamic/3d/1/gltf/scene.gltf" auto-rotate camera-controls background-color="#455A64"></model-viewer>
+                    </div>
+                    <div id="view-media-images" class="is-invisible" style="width:100%; height: auto;">
+                        <div class="preview-carousel">
+                            {% for image in media_images %}
+                            <div>
+                                <img src="/dynamic/{{ image.type }}/{{ image.url }}" class="media-img" />
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <style>
+                        .preview-carousel {
+                          height: auto;
+                          width: 80%;
+                          padding: 40px;
+                        }
+
+                        .media-img {
+                          height: auto;
+                          width: auto;
+                        }
+
+                        model-viewer:focus {
+                          outline: none;
+                        }
+
+                        model-viewer {
+                          width: 587px;
+                          height: 436px;
+                        }
+
+                        .is-invisible {
+                          position: absolute !important;
+                          overflow: hidden;
+                          height: 0px;
+                          max-height: 0px;
+                        }
+                    </style>
+                </nav>
             </div>
             <div class="column">
-                <h2>Tas Kulit</h2>
-                <p>Oleh <b>Toko Andra</b></p>
+                <h2 class="is-size-2">{{ product.name }}</h2>
+                <p>Oleh <b>{{ shop.name }}</b></p>
+                <p>{{ product.description }}</p>
+
+                <div class="is-pulled-left">
+                    <div class="field has-addons has-addons-centered">
+                      <p class="control">
+                        <button class="button is-primary" id="reduce-quantity">
+                          -
+                        </button>
+                      </p>
+                      <p class="control">
+                        <input class="input" type="number" id="quantity-field" value="0" placeholder="Quantity">
+                      </p>
+                      <p class="control">
+                        <button class="button is-primary" id="add-quantity">
+                          +
+                        </button>
+                      </p>
+                      <p class="control">
+                        <button class="button is-danger" id="add-to-cart">Add to Cart</button>
+                      </p>
+                    </div>
+                </div>
             </div>
         </div>
+
+        <script type="text/javascript">
+            var product_id = "{{ product.id }}";
+            var user_email = "{{ current_user.email }}";
+            const quantityField = document.querySelector("#quantity-field");
+
+            document.querySelector("#add-quantity").addEventListener("click", () => {
+                quantityField.value = parseInt(quantityField.value) + 1;
+            });
+
+            document.querySelector("#reduce-quantity").addEventListener("click", () => {
+                quantityField.value = parseInt(quantityField.value) - 1;
+            });
+
+            function objectToURLEncode(string) {
+                return Object.entries(string).map(([k, v]) => `${encodeURIComponent(k)}=${encodeURIComponent(v)}`).join('&');
+            }
+
+            document.querySelector("#add-to-cart").addEventListener("click", () => {
+                fetch("/api/me/trolley", {
+                    method: "POST",
+                    headers: {
+                      'Content-Type': 'application/x-www-form-urlencoded'
+                    },
+                    body: objectToURLEncode({
+                        email: user_email,
+                        product_id,
+                        quantity: quantityField.value,
+                    }),
+                })
+                .then((data) => data.json())
+                .then((decoded_data) => {
+                    if (decoded_data.success === true) {
+                        alert("Ok");
+                    } else {
+                        alert("Bruh");
+                    }
+                })
+            });
+
+            $(".preview-carousel").slick({
+                infinite: true,
+                dots: true,
+                slidesToShow: 1,
+                slidesToScroll: 1,
+                draggable: false,
+                swipe: false,
+            });
+        </script>
+        <style>
+        .slick-prev:before {
+          font-size: 20px;
+          line-height: 20px;
+          color: #00d1b2;
+        }
+        .slick-next:before {
+          font-size: 20px;
+          line-height: 20px;
+          color: #00d1b2;
+        }
+        .slick-dots li button:before {
+          font-size: 20px;
+          line-height: 20px;
+          color: #00d1b2;
+        }
+        </style>
+
+<!--        <div class="columns">-->
+<!--            <div class="column is-half">-->
+<!--                Edit Media-->
+<!--            </div>-->
+<!--            <div class="column">-->
+
+<!--            </div>-->
+<!--        </div>-->
     </container>
 {% endblock %}
