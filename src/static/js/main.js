@@ -34,8 +34,8 @@ try {
         media3d.classList.remove('is-active');
         mediaImages.classList.add('is-active');
 
-        viewMediaImages.classList.remove('is-hidden');
-        viewMedia3d.classList.add('is-hidden');
+        viewMediaImages.classList.remove('is-invisible');
+        viewMedia3d.classList.add('is-invisible');
 
         media.media3d = false;
         media.mediaImages = true;
@@ -49,8 +49,8 @@ try {
         media3d.classList.add('is-active');
         mediaImages.classList.remove('is-active');
 
-        viewMediaImages.classList.add('is-hidden');
-        viewMedia3d.classList.remove('is-hidden');
+        viewMediaImages.classList.add('is-invisible');
+        viewMedia3d.classList.remove('is-invisible');
 
         media.media3d = true;
         media.mediaImages = false;

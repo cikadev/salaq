@@ -1,9 +1,7 @@
-import flask_login
 from src import db
-import src.models
 
 
-class Product(flask_login.UserMixin, db.Model):
+class Product(db.Model):
     __tablename__ = 'product'
     id = db.Column(db.Integer, primary_key=True)
     shop_id = db.Column(db.Integer)

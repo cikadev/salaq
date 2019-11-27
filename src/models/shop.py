@@ -1,6 +1,5 @@
 import flask_login
 from src import db
-import src.models
 
 
 class Shop(flask_login.UserMixin, db.Model):
@@ -18,7 +17,7 @@ class Shop(flask_login.UserMixin, db.Model):
         return Shop.query.filter_by(user_email=email) is not None
 
     def get_products(self):
-        return models.Product.query.filter_by(shop_id=self.id)
+        return models.Product.query.filter_by(shop_id=self.id).all()
 
     @staticmethod
     def where_id(id):

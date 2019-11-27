@@ -14,23 +14,37 @@
             <div class="column is-half" style="padding: 50px;">
                 <nav class="panel">
                   <p class="panel-tabs">
+                      {% if media_3d != [] %}
                     <a class="is-active" id="media-3d">3D Object</a>
+                      {% endif %}
+                      {% if media_images != [] %}
                     <a id="media-images">Images</a>
+                      {% endif %}
                   </p>
-                    <div id="view-media-3d">
-                        <model-viewer src="https://modelviewer.dev/examples/assets/Astronaut.glb" alt="A 3D model of an astronaut" auto-rotate camera-controls background-color="#455A64"></model-viewer>
+                    <div id="view-media-3d" style="width:100%; height: auto;">
+                        <model-viewer src="/dynamic/3d/1/gltf/scene.gltf" auto-rotate camera-controls background-color="#455A64"></model-viewer>
                     </div>
-                    <div id="view-media-images" class="is-hidden">
+                    <div id="view-media-images" class="is-invisible" style="width:100%; height: auto;">
                         <div class="preview-carousel">
+                            {% for image in media_images %}
                             <div>
-                                <img src="/dynamic/1.jpg" />
+                                <img src="/dynamic/{{ image.type }}/{{ image.url }}" class="media-img" />
                             </div>
-                            <div>
-                                <img src="/dynamic/2.jpg" />
-                            </div>
+                            {% endfor %}
                         </div>
                     </div>
                     <style>
+                        .preview-carousel {
+                          height: auto;
+                          width: 80%;
+                          padding: 40px;
+                        }
+
+                        .media-img {
+                          height: auto;
+                          width: auto;
+                        }
+
                         model-viewer:focus {
                           outline: none;
                         }
@@ -39,6 +53,13 @@
                           width: 587px;
                           height: 436px;
                         }
+
+                        .is-invisible {
+                          position: absolute !important;
+                          overflow: hidden;
+                          height: 0px;
+                          max-height: 0px;
+                        }
                     </style>
                 </nav>
             </div>
@@ -46,11 +67,69 @@
                 <h2 class="is-size-2">{{ product.name }}</h2>
                 <p>Oleh <b>{{ shop.name }}</b></p>
                 <p>{{ product.description }}</p>
-                <button class="button is-medium">Buy</button>
+
+                <div class="is-pulled-left">
+                    <div class="field has-addons has-addons-centered">
+                      <p class="control">
+                        <button class="button is-primary" id="reduce-quantity">
+                          -
+                        </button>
+                      </p>
+                      <p class="control">
+                        <input class="input" type="number" id="quantity-field" value="0" placeholder="Quantity">
+                      </p>
+                      <p class="control">
+                        <button class="button is-primary" id="add-quantity">
+                          +
+                        </button>
+                      </p>
+                      <p class="control">
+                        <button class="button is-danger" id="add-to-cart">Add to Cart</button>
+                      </p>
+                    </div>
+                </div>
             </div>
         </div>
 
         <script type="text/javascript">
+            var product_id = "{{ product.id }}";
+            var user_email = "{{ current_user.email }}";
+            const quantityField = document.querySelector("#quantity-field");
+
+            document.querySelector("#add-quantity").addEventListener("click", () => {
+                quantityField.value = parseInt(quantityField.value) + 1;
+            });
+
+            document.querySelector("#reduce-quantity").addEventListener("click", () => {
+                quantityField.value = parseInt(quantityField.value) - 1;
+            });
+
+            function objectToURLEncode(string) {
+                return Object.entries(string).map(([k, v]) => `${encodeURIComponent(k)}=${encodeURIComponent(v)}`).join('&');
+            }
+
+            document.querySelector("#add-to-cart").addEventListener("click", () => {
+                fetch("/api/me/trolley", {
+                    method: "POST",
+                    headers: {
+                      'Content-Type': 'application/x-www-form-urlencoded'
+                    },
+                    body: objectToURLEncode({
+                        email: user_email,
+                        product_id,
+                        quantity: quantityField.value,
+                    }),
+                })
+                .then((data) => data.json())
+                .then((decoded_data) => {
+                    if (decoded_data.success === true) {
+                        alert("Ok");
+                    } else {
+                        alert("Bruh");
+                    }
+                })
+            });
+
             $(".preview-carousel").slick({
                 infinite: true,
                 dots: true,
