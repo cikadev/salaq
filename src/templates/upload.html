@@ -1,0 +1,90 @@
+{% extends "layout.html" %}
+{% block body %}
+<container>
+    <div class="columns is-centered">
+        <div class="column is-half">
+            <div class="field">
+                <label class="label">Name</label>
+                <div class="control">
+                    <input class="input" type="text" placeholder="Text input">
+                </div>
+            </div>
+            <div class="field">
+                <label class="label">Harga</label>
+                <div class="control">
+                    <input class="input" type="text" placeholder="Text input">
+                </div>
+            </div>
+            <div class="field">
+                <label class="label">Detail</label>
+                <div class="control">
+                    <textarea class="textarea" placeholder="Textarea"></textarea>
+                </div>
+            </div>
+            <div class="field">
+                <div class="columns">
+                    <div class="column is-half">
+                        <div class="card">
+                            <div class="card-header-title is-centered">
+                                 3D Model
+                            </div>
+                            <div class="card-content">
+                                <label class="label">Upload .zip atau .rar koleksi foto yang akan dijadikan 3D model</label>
+                                <label class="label">Atau upload .zip atau .rar gtfl atau glb jika sudah dalam 3D model</label>
+                                <div class="file has-name">
+                                    <label class="file-label">
+                                      <input class="file-input" type="file" name="resume">
+                                      <span class="file-cta">
+                                        <span class="file-icon">
+                                          <i class="fas fa-upload"></i>
+                                        </span>
+                                        <span class="file-label">
+                                          Choose a file…
+                                        </span>
+                                      </span>
+                                      <span class="file-name">
+                                      </span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="column is-half">
+                        <div class="card">
+                            <div class="card-header-title is-centered">
+                                 Foto Preview
+                            </div>
+                            <div class="card-content">
+                                <label class="label">Upload .zip atau .rar koleksi foto yang akan menjadi preview item</label>
+                                <div class="file has-name">
+                                    <label class="file-label">
+                                      <input class="file-input" type="file" name="resume">
+                                      <span class="file-cta">
+                                        <span class="file-icon">
+                                          <i class="fas fa-upload"></i>
+                                        </span>
+                                        <span class="file-label">
+                                          Choose a file…
+                                        </span>
+                                      </span>
+                                      <span class="file-name">
+                                      </span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="field is-grouped">
+                <div class="control">
+                  <button class="button is-link">Submit</button>
+                </div>
+                <div class="control">
+                  <button class="button is-link is-light">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</container>
+{% endblock %}

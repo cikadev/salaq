@@ -78,3 +78,7 @@ def signup_API():
 @app.route('/@<username>/<product_slug>')
 def product(username, product_slug):
     return render_template("product.html", title="Product")
+
+@app.route('/url')
+def testlaunch():
+    return render_template("upload.html", title="Upload")
