@@ -7,3 +7,4 @@ engine = create_engine("postgres://postgres:123@localhost:5432/bojonegoro", echo
 Base = declarative_base()
 Session = sessionmaker(bind=engine)
 session = Session()
+

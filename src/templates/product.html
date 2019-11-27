@@ -1,14 +1,90 @@
 {% extends "layout.html" %}
 {% block body %}
     <container>
+
+        <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.js"></script>
+        <script nomodule src="https://unpkg.com/@google/model-viewer/dist/model-viewer-legacy.js"></script>
+        <!-- Use it like any other HTML element -->
+
+        <link rel="stylesheet" type="text/css" href="/static/vendor/slick/slick.css"/>
+        <link rel="stylesheet" type="text/css" href="/static/vendor/slick/slick-theme.css"/>
+        <script type="text/javascript" src="/static/vendor/slick/slick.min.js"></script>
+
         <div class="columns">
-            <div class="column is-two-thirds">
-                Media
+            <div class="column is-half" style="padding: 50px;">
+                <nav class="panel">
+                  <p class="panel-tabs">
+                    <a class="is-active" id="media-3d">3D Object</a>
+                    <a id="media-images">Images</a>
+                  </p>
+                    <div id="view-media-3d">
+                        <model-viewer src="https://modelviewer.dev/examples/assets/Astronaut.glb" alt="A 3D model of an astronaut" auto-rotate camera-controls background-color="#455A64"></model-viewer>
+                    </div>
+                    <div id="view-media-images" class="is-hidden">
+                        <div class="preview-carousel">
+                            <div>
+                                <img src="/dynamic/1.jpg" />
+                            </div>
+                            <div>
+                                <img src="/dynamic/2.jpg" />
+                            </div>
+                        </div>
+                    </div>
+                    <style>
+                        model-viewer:focus {
+                          outline: none;
+                        }
+
+                        model-viewer {
+                          width: 587px;
+                          height: 436px;
+                        }
+                    </style>
+                </nav>
             </div>
             <div class="column">
-                <h2>Tas Kulit</h2>
-                <p>Oleh <b>Toko Andra</b></p>
+                <h2 class="is-size-2">{{ product.name }}</h2>
+                <p>Oleh <b>{{ shop.name }}</b></p>
+                <p>{{ product.description }}</p>
+                <button class="button is-medium">Buy</button>
             </div>
         </div>
+
+        <script type="text/javascript">
+            $(".preview-carousel").slick({
+                infinite: true,
+                dots: true,
+                slidesToShow: 1,
+                slidesToScroll: 1,
+                draggable: false,
+                swipe: false,
+            });
+        </script>
+        <style>
+        .slick-prev:before {
+          font-size: 20px;
+          line-height: 20px;
+          color: #00d1b2;
+        }
+        .slick-next:before {
+          font-size: 20px;
+          line-height: 20px;
+          color: #00d1b2;
+        }
+        .slick-dots li button:before {
+          font-size: 20px;
+          line-height: 20px;
+          color: #00d1b2;
+        }
+        </style>
+
+<!--        <div class="columns">-->
+<!--            <div class="column is-half">-->
+<!--                Edit Media-->
+<!--            </div>-->
+<!--            <div class="column">-->
+
+<!--            </div>-->
+<!--        </div>-->
     </container>
 {% endblock %}

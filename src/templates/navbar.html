@@ -1,7 +1,7 @@
 <nav class="navbar" role="navigation" aria-label="main navigation">
     <div class="navbar-brand">
       <a class="navbar-item" href="/">
-        <img src="/static/logo.png" width="112" height="28">
+        <img src="/static/img/logo.png" width="112" height="28">
       </a>
   
       <a role="button" class="navbar-burger burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
@@ -13,46 +13,97 @@
   
     <div id="navbarBasicExample" class="navbar-menu">
       <div class="navbar-start">
-        <a class="navbar-item">
+        <a class="navbar-item" href="/">
           Home
         </a>
   
-        <a class="navbar-item">
-          Documentation
-        </a>
-  
-        <div class="navbar-item has-dropdown is-hoverable">
-          <a class="navbar-link">
-            More
-          </a>
-  
-          <div class="navbar-dropdown">
-            <a class="navbar-item">
-              About
-            </a>
-            <a class="navbar-item">
-              Jobs
-            </a>
-            <a class="navbar-item">
-              Contact
-            </a>
-            <hr class="navbar-divider">
-            <a class="navbar-item">
-              Report an issue
-            </a>
-          </div>
+        <div class="navbar-item field">
+          <p class="control has-icons-right">
+            <input class="input" type="search" placeholder="Search...">
+            <span class="icon is-small is-right">
+              <icon />
+            </span>
+          </p>
         </div>
+  
+<!--        <div class="navbar-item has-dropdown is-hoverable">-->
+<!--          <a class="navbar-link">-->
+<!--            More-->
+<!--          </a>-->
+<!--  -->
+<!--          <div class="navbar-dropdown">-->
+<!--            <a class="navbar-item">-->
+<!--              About-->
+<!--            </a>-->
+<!--            <a class="navbar-item">-->
+<!--              Jobs-->
+<!--            </a>-->
+<!--            <a class="navbar-item">-->
+<!--              Contact-->
+<!--            </a>-->
+<!--            <hr class="navbar-divider">-->
+<!--            <a class="navbar-item">-->
+<!--              Report an issue-->
+<!--            </a>-->
+<!--          </div>-->
+<!--        </div>-->
       </div>
   
       <div class="navbar-end">
         <div class="navbar-item">
           <div class="buttons">
+            <div class="dropdown" id="dropdown-trolley">
+              <div class="dropdown-trigger">
+                <button class="button" aria-haspopup="true">
+                  <span>Trolley</span>
+                  <span class="icon is-small">
+                    <i class="fa fa-shopping-cart" aria-hidden="true"></i>
+                  </span>
+                </button>
+              </div>
+              <div class="dropdown-menu" role="menu">
+                <div class="dropdown-content">
+                  <a href="#" class="dropdown-item">
+                    Item 1 - 1x
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="navbar-item">
+          <div class="buttons">
+          {% if not current_user.email %}
             <a class="button is-primary" href="/signup">
               <strong>Sign up</strong>
             </a>
             <a class="button is-light" href="/signin">
               Log in
             </a>
+          {% else %}
+            <div class="dropdown" id="dropdown-user">
+              <div class="dropdown-trigger">
+                <button class="button" aria-haspopup="true">
+                  <span>{{ current_user.email }}</span>
+                  <span class="icon is-small">
+                    <i class="fa fa-angle-down" aria-hidden="true"></i>
+                  </span>
+                </button>
+              </div>
+              <div class="dropdown-menu" role="menu">
+                <div class="dropdown-content">
+                  <a href="#" class="dropdown-item">
+                    Settings
+                  </a>
+                  <hr class="dropdown-divider">
+                  <a href="/logout" class="dropdown-item">
+                    Logout
+                  </a>
+                </div>
+              </div>
+            </div>
+          {% endif %}
           </div>
         </div>
       </div>

@@ -1,14 +1,18 @@
-from flask import render_template, request, flash, url_for, redirect
+from flask import render_template, request, flash, url_for, redirect, send_from_directory
 import sqlalchemy
 import json
 import flask_login
 from src import login_manager, app
+
 from src.models.users import Users
+from src.models.product import Product
+from src.models.shop import Shop
+
 
 @login_manager.user_loader
 def load_user(email):
     if email is not None:
-        return models.Users.where_email(email)
+        return Users.where_email(email)
     return None
 
 
@@ -20,7 +24,10 @@ def unauthorized():
 
 @app.route('/')
 def home():
-    return render_template("home.html", title="Home")
+    current_user = flask_login.current_user
+    product_list = Product.query.all()
+    print(product_list)
+    return render_template("home.html", title="Home", product_list=product_list, current_user=current_user)
 
 @app.route('/logout')
 def logout():
@@ -75,6 +82,29 @@ def signup_API():
             "success": success,
         })
 
-@app.route('/@<username>/<product_slug>')
-def product(username, product_slug):
-    return render_template("product.html", title="Product")
+@app.route('/@<shop_id>/<product_id>')
+def product(shop_id, product_id):
+    shop = Shop.where_id(shop_id)
+    if shop is None:
+        return redirect(url_for("not_found"))
+
+    product = Product.where_id(product_id)
+    if product is None:
+        return redirect(url_for("not_found"))
+
+    return render_template("product.html", title="Product", product=product, shop=shop)
+
+@app.route('/@<shop_id>')
+def shop(shop_id):
+    shop = Shop.where_id(shop_id)
+    if shop is None:
+        return redirect(url_for("not_found"))
+    return render_template("shop.html", title="Shop", shop=shop)
+
+@app.route('/404')
+def not_found():
+    return "404"
+
+@app.route('/dynamic/<path:filename>')
+def custom_static(filename):
+    return send_from_directory("dynamic/", filename)
