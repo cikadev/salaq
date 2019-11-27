@@ -1,6 +1,6 @@
 # Salaq
 
-**Salaq** is a e-marketplace aimed for handycraft that uilize the technology and advantages of virtual reality. **Salaq** are meant to help small-mid level industry in [Bojonegoro](https://en.wikipedia.org/wiki/Bojonegoro_Regency) to promote their product
+**Salaq** is a e-marketplace aimed for handycrafts that utilize the technology and advantages of virtual reality. **Salaq** are meant to help small-mid level industry in [Bojonegoro](https://en.wikipedia.org/wiki/Bojonegoro_Regency) to promote their product
 
 **Salaq** is our product from [Bojonegoro Hackathon](http://www.hackathon.joglo.space/)
 
