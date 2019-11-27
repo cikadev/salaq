@@ -8,6 +8,14 @@ class Trolley(db.Model):
     quantity = db.Column(db.Integer)
     product_id = db.Column(db.Integer)
 
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "user_email": self.user_email,
+            "quantity": self.quantity,
+            "product_id": self.product_id,
+        }
+
     def create(self):
         db.session.add(self)
         db.session.commit()

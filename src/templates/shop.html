@@ -1,6 +1,42 @@
 {% extends "layout.html" %}
 {% block body %}
     <div class="container">
-        <h2>{{ shop.name }}</h2>
+        <h2 class="is-size-2">{{ shop.name }}</h2>
+        <div class="columns">
+            {% for product, product_thumbnail in product_list_and_media %}
+                <div class="column is-4">
+                    <div class="card">
+                      <div class="card-image">
+                        <a href="/@{{ product.shop_id }}/{{ product.id }}">
+                            <figure class="image is-4by3">
+                              <img src="{{ product_thumbnail }}" alt="Placeholder image">
+                            </figure>
+                        </a>
+                      </div>
+                      <div class="card-content">
+                        <a href="/@{{ product.shop_id }}/{{ product.id }}">
+                        <div class="media">
+                          <div class="media-left">
+                            <figure class="image is-48x48">
+                              <img src="https://bulma.io/images/placeholders/96x96.png" alt="Placeholder image">
+                            </figure>
+                          </div>
+                          <div class="media-content">
+                            <p class="title is-4">{{ product.name }}</p>
+                            <p class="subtitle is-6">Rp. {{ product.price }}</p>
+                          </div>
+                        </div>
+
+                        <div class="content">
+                          <p>
+                              <time datetime="2016-1-1">{{ product.created_at }}</time>
+                          </p>
+                        </div>
+                        </a>
+                      </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
     </div>
 {% endblock %}

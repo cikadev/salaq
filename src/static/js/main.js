@@ -60,3 +60,18 @@ try {
 } catch (err) {
     console.log(err);
 }
+
+function refreshTrolley() {
+    const trolleyList = document.querySelector("#trolley-list");
+
+    trolleyList.innerHTML = "";
+    fetch("/api/me/trolley")
+    .then((data) => data.json())
+    .then((decoded_data) => {
+        decoded_data.trolley.forEach((product_trolley) => {
+            trolleyList.innerHTML += `<a href="#" class="dropdown-item">${product_trolley.name} - ${product_trolley.quantity}x</a>`;
+        });
+    })
+
+    refreshTrolley();
+}

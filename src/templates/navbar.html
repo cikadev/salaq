@@ -16,7 +16,19 @@
         <a class="navbar-item" href="/">
           Home
         </a>
-  
+
+        {% if current_user.email %}
+          {% if current_user.shop %}
+            <a class="navbar-item" href="/@{{ current_user.shop.id }}">
+              My Shop
+            </a>
+          {% else %}
+            <a class="navbar-item" href="/shop/create">
+              Create Shop
+            </a>
+          {% endif %}
+        {% endif %}
+
         <div class="navbar-item field">
           <p class="control has-icons-right">
             <input class="input" type="search" placeholder="Search...">
@@ -25,7 +37,6 @@
             </span>
           </p>
         </div>
-  
 <!--        <div class="navbar-item has-dropdown is-hoverable">-->
 <!--          <a class="navbar-link">-->
 <!--            More-->
@@ -62,10 +73,8 @@
                 </button>
               </div>
               <div class="dropdown-menu" role="menu">
-                <div class="dropdown-content">
-                  <a href="#" class="dropdown-item">
-                    Item 1 - 1x
-                  </a>
+                <div class="dropdown-content" id="trolley-list">
+                  <a href="#" class="dropdown-item">A</a>
                 </div>
               </div>
             </div>

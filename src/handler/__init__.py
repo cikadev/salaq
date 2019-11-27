@@ -14,7 +14,9 @@ from src.models.trolley import Trolley
 @login_manager.user_loader
 def load_user(email):
     if email is not None:
-        return Users.where_email(email)
+        user = Users.where_email(email)
+        user.shop = Shop.where_user_email(email)
+        return user
     return None
 
 
@@ -113,6 +115,8 @@ def product(shop_id, product_id):
     media_3d = Media.where_product_id_3d(product_id)
     media_images = Media.where_product_id_image(product_id)
 
+    print(media_3d)
+
     current_user = flask_login.current_user
     return render_template("product.html", title="Product", product=product, shop=shop, media_3d=media_3d,
                            media_images=media_images, current_user=current_user)
@@ -123,14 +127,35 @@ def shop(shop_id):
     shop = Shop.where_id(shop_id)
     if shop is None:
         return redirect(url_for("not_found"))
-    return render_template("shop.html", title="Shop", shop=shop)
+
+    product_list = shop.get_products()
+
+    def add_image(product):
+        try:
+            image = Media.where_product_id_image(product.id)[0]
+            image_url = f"/dynamic/{image.type}/{image.url}"
+        except IndexError:
+            image_url = "https://bulma.io/images/placeholders/1280x960.png"
+        return product, image_url
+
+    product_list_and_media = map(add_image, product_list)
+
+    return render_template("shop.html", title="Shop", shop=shop, product_list_and_media=product_list_and_media)
 
 @app.route('/api/me/trolley')
 @flask_login.login_required
 def me_trolley_API():
     current_user = flask_login.current_user
+
+    def add_product_name(trolley_product):
+        product = Product.where_id(trolley_product.product_id);
+        trolley_data = trolley_product.to_dict()
+        trolley_data["name"] = product.name
+        trolley_data["price"] = product.price
+        return trolley_data
+
     return json.dumps({
-        "cart": Trolley.where_user_email(current_user.email),
+        "trolley": list(map(add_product_name, Trolley.where_user_email(current_user.email))),
     })
 
 @app.route('/api/me/trolley', methods=["POST"])

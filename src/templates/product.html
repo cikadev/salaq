@@ -22,7 +22,9 @@
                       {% endif %}
                   </p>
                     <div id="view-media-3d" style="width:100%; height: auto;">
-                        <model-viewer src="/dynamic/3d/1/gltf/scene.gltf" auto-rotate camera-controls background-color="#455A64"></model-viewer>
+                        {% for model in media_3d %}
+                            <model-viewer src="/dynamic/{{ model.type }}/{{ model.url }}" auto-rotate camera-controls background-color="#455A64"></model-viewer>
+                        {% endfor %}
                     </div>
                     <div id="view-media-images" class="is-invisible" style="width:100%; height: auto;">
                         <div class="preview-carousel">
