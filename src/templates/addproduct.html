@@ -6,82 +6,54 @@
             <div class="field">
                 <label class="label">Name</label>
                 <div class="control">
-                    <input class="input" type="text" placeholder="Name">
+                    <input class="input" id="field-name" type="text" placeholder="Name">
                 </div>
             </div>
             <div class="field">
                 <label class="label">Price</label>
                 <div class="control">
-                    <input class="input" type="text" placeholder="Price">
+                    <input class="input" id="field-price" type="text" placeholder="Price">
                 </div>
             </div>
             <div class="field">
                 <label class="label">Description</label>
                 <div class="control">
-                    <textarea class="textarea" placeholder="Description"></textarea>
-                </div>
-            </div>
-            <div class="field">
-                <div class="columns">
-                    <div class="column is-half">
-                        <div class="card">
-                            <div class="card-header-title is-centered">
-                                 3D Model
-                            </div>
-                            <div class="card-content">
-                                <label class="label">Upload .zip atau .rar koleksi foto yang akan dijadikan 3D model</label>
-                                <label class="label">Atau upload .zip atau .rar gtfl atau glb jika sudah dalam 3D model</label>
-                                <div class="file has-name">
-                                    <label class="file-label">
-                                      <input class="file-input" type="file" name="resume">
-                                      <span class="file-cta">
-                                        <span class="file-icon">
-                                          <i class="fas fa-upload"></i>
-                                        </span>
-                                        <span class="file-label">
-                                          Choose a file…
-                                        </span>
-                                      </span>
-                                      <span class="file-name">
-                                      </span>
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="column is-half">
-                        <div class="card">
-                            <div class="card-header-title is-centered">
-                                 Foto Preview
-                            </div>
-                            <div class="card-content">
-                                <label class="label">Upload .zip atau .rar koleksi foto yang akan menjadi preview item</label>
-                                <div class="file has-name">
-                                    <label class="file-label">
-                                      <input class="file-input" type="file" name="resume">
-                                      <span class="file-cta">
-                                        <span class="file-icon">
-                                          <i class="fas fa-upload"></i>
-                                        </span>
-                                        <span class="file-label">
-                                          Choose a file…
-                                        </span>
-                                      </span>
-                                      <span class="file-name">
-                                      </span>
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    <textarea class="textarea" id="field-description" placeholder="Description"></textarea>
                 </div>
             </div>
             <div class="field is-grouped">
                 <div class="control">
-                  <button class="button is-link">Create</button>
+                  <button class="button is-link" id="button-add-product">Add</button>
                 </div>
             </div>
         </div>
     </div>
+    <script type="text/javascript">
+        function objectToURLEncode(string) {
+            return Object.entries(string).map(([k, v]) => `${encodeURIComponent(k)}=${encodeURIComponent(v)}`).join('&');
+        }
+
+        document.querySelector("#button-add-product").addEventListener("click", () => {
+            fetch("/api/@{{ shop_id }}/product/add", {
+                method: "POST",
+                headers: {
+                  'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: objectToURLEncode({
+                    name: document.querySelector("#field-name").value,
+                    price: document.querySelector("#field-price").value,
+                    description: document.querySelector("#field-description").value,
+                }),
+            })
+            .then((data) => data.json())
+            .then((decoded_data) => {
+                if (decoded_data.success === true) {
+                    window.location.replace("/@{{ shop_id }}/" + decoded_data.product_id);
+                } else {
+                    alert("Error happened");
+                }
+            })
+        });
+    </script>
 </container>
 {% endblock %}

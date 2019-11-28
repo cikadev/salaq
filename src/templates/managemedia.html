@@ -1,0 +1,72 @@
+<div class="columns">
+    <div class="column is-half">
+        <div class="card">
+            <div class="card-header-title is-centered">
+                 3D Model
+            </div>
+            <div class="card-content">
+                <label class="label">Upload .zip atau .rar koleksi foto yang akan dijadikan 3D model</label>
+                <label class="label">Atau upload .zip atau .rar gtfl atau glb jika sudah dalam 3D model</label>
+                <div class="file has-name">
+                    <label class="file-label">
+                      <input class="file-input" type="file" name="resume">
+                      <span class="file-cta">
+                        <span class="file-icon">
+                          <i class="fas fa-upload"></i>
+                        </span>
+                        <span class="file-label">
+                          Choose a file…
+                        </span>
+                      </span>
+                      <span class="file-name">
+                      </span>
+                    </label>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="column">
+        <div class="card">
+            <div class="card-header-title is-centered">
+                 Foto Preview
+            </div>
+            <div class="card-content">
+                <label class="label">Upload .zip atau .rar koleksi foto yang akan menjadi preview item</label>
+                <div class="file has-name">
+                    <label class="file-label">
+                      <input class="file-input" type="file" id="file-images">
+                      <span class="file-cta">
+                        <span class="file-icon">
+                          <i class="fas fa-upload"></i>
+                        </span>
+                        <span class="file-label">
+                          Choose a file…
+                        </span>
+                      </span>
+                      <span class="file-name">
+                      </span>
+                    </label>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    document.querySelector("#file-images").addEventListener("change", () => {
+        let formData = new FormData();
+        formData.append('image', document.querySelector("#file-images").files[0]);
+
+        fetch(`/api/@${shop_id}/${product_id}/media/image/add`, {
+            method: "POST",
+            body: formData,
+        })
+        .then((data) => data.json())
+        .then((decoded_data) => {
+            if (decoded_data.success === true) {
+                window.location.replace("");
+            } else {
+                alert(`Error happened: ${decoded_data.message}`);
+            }
+        })
+    });
+</script>

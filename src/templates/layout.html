@@ -10,10 +10,18 @@
             padding:10px 0px;
         }
     </style>
+    {% if current_user %}
+        <script type="text/javascript" src="/profile.js"></script>
+    {% endif %}
 </head>
 <body>
     {% include "navbar.html" %}
-    {% block body %}
-    {% endblock %}
+    <main style="margin-top:20px;">
+        {% block body %}
+        {% endblock %}
+    </main>
     <script type="text/javascript" src="/static/js/main.js"></script>
+    <script>
+        refreshTrolley();
+    </script>
 </body>

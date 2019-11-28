@@ -1,4 +1,4 @@
-from flask import render_template, request, flash, url_for, redirect, send_from_directory
+from flask import render_template, request, flash, url_for, redirect, send_from_directory, session
 import sqlalchemy
 import json
 import flask_login
@@ -116,11 +116,15 @@ def product(shop_id, product_id):
     media_3d = Media.where_product_id_3d(product_id)
     media_images = Media.where_product_id_image(product_id)
 
-    print(media_3d)
-
     current_user = flask_login.current_user
+
+    try:
+        is_mine = current_user.email == shop.user_email
+    except Exception:
+        is_mine = False
+
     return render_template("product.html", title="Product", product=product, shop=shop, media_3d=media_3d,
-                           media_images=media_images, current_user=current_user)
+                           media_images=media_images, current_user=current_user, is_mine=is_mine)
 
 
 @app.route('/@<shop_id>')
@@ -165,6 +169,7 @@ def me_trolley_API():
         return trolley_data
 
     return json.dumps({
+        "success": True,
         "trolley": list(map(add_product_name, Trolley.where_user_email(current_user.email))),
     })
 
@@ -246,7 +251,105 @@ def add_product(shop_id):
             return redirect(url_for("not_found"))
     except AttributeError:  # If user doesnt have any shop
         return redirect(url_for("not_found"))
-    return render_template("addproduct.html", title="Add Product", current_user=current_user)
+
+    return render_template("addproduct.html", title="Add Product", current_user=current_user, shop_id=shop_id)
+
+@app.route('/api/@<shop_id>/product/add', methods=["POST"])
+@flask_login.login_required
+def add_product_API(shop_id):
+    name = request.form['name']
+    description = request.form['description']
+    price = request.form['price']
+
+    try:
+        current_user = flask_login.current_user
+        if shop_id != str(current_user.shop.id):
+            return json.dumps({
+                "success": False,
+            })
+    except AttributeError:  # If user doesnt have any shop
+        return json.dumps({
+            "success": False,
+        })
+
+    product_temp = Product()
+    product_temp.shop_id = shop_id
+    product_temp.name = name
+    product_temp.price = price
+    product_temp.description = description
+    product_temp.create()
+
+    return json.dumps({
+        "success": True,
+        "product_id": product_temp.id,
+    })
+
+@app.route('/@<shop_id>/<product_id>/media/manage')
+@flask_login.login_required
+def manage_media(shop_id, product_id):
+    try:
+        current_user = flask_login.current_user
+        if shop_id != str(current_user.shop.id):
+            return redirect(url_for("not_found"))
+    except AttributeError:  # If user doesnt have any shop
+        return redirect(url_for("not_found"))
+
+    product = Product.where_id(product_id)
+
+    if product is None:
+        return redirect(url_for("not_found"))
+
+    return render_template("managemedia.html", title="Manage Media", current_user=current_user, shop_id=shop_id, product=product)
+
+@app.route('/profile.js')
+@flask_login.login_required
+def profile_js():
+    current_user = flask_login.current_user
+    return render_template("profile.js", current_user=current_user)
+
+@app.route('/api/@<shop_id>/<product_id>/media/image/add', methods=["POST"])
+@flask_login.login_required
+def product_media_image_add_API(shop_id, product_id):
+    uploaded_image = request.files['image']
+
+    try:
+        current_user = flask_login.current_user
+        print(shop_id, current_user.shop.id)
+        if str(shop_id) != str(current_user.shop.id):
+            return json.dumps({
+                "success": False,
+                "message": "Invalid shop",
+            })
+    except AttributeError:  # If user doesnt have any shop
+        return json.dumps({
+            "success": False,
+            "message": "Invalid shop. You don't have any shop",
+        })
+
+    try:
+        extension = uploaded_image.filename.split(".")[-1]
+    except Exception:
+        return json.dumps({
+            "success": False,
+            "message": "No extension",
+        })
+
+    media_temp = Media()
+    media_temp.type = "image"
+    media_temp.url = ""
+    media_temp.product_id = product_id
+    media_temp.create()
+
+    file_path = f"{media_temp.id}.{extension}"
+    uploaded_image.save("src/dynamic/image/" + file_path)
+
+    media_temp.url = file_path
+    media_temp.update()
+
+    return json.dumps({
+        "success": True,
+        "message": "",
+    })
 
 
 @app.route('/404')

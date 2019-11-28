@@ -71,7 +71,6 @@ function refreshTrolley() {
         decoded_data.trolley.forEach((product_trolley) => {
             trolleyList.innerHTML += `<a href="#" class="dropdown-item">${product_trolley.name} - ${product_trolley.quantity}x</a>`;
         });
-    })
-
-    refreshTrolley();
+        trolleyList.innerHTML += `<hr class="dropdown-divider"><a href="#" class="dropdown-item">Checkout</a>`;
+    });
 }

@@ -26,3 +26,9 @@ class Media(db.Model):
     @staticmethod
     def where_product_id_image(product_id):
         return Media.query.filter_by(product_id=product_id, type="image").all()
+
+    def update(self):
+        db.session.query(Media).filter_by(id=self.id).update({
+            "url": self.url,
+        })
+        db.session.commit()
