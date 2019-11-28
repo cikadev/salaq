@@ -199,7 +199,7 @@ CREATE TABLE public.product (
     name character varying,
     description text,
     price integer,
-    created_at timestamp without time zone DEFAULT (now())::timestamp(0) without time zone NOT NULL
+    created_at timestamp without time zone DEFAULT (now())::timestamp(0) without time zone
 );
 
 
@@ -594,6 +594,11 @@ COPY public.media (id, type, url, product_id) FROM stdin;
 1	3d	1/gltf/scene.gltf	1
 2	image	1.jpg	1
 3	image	2.webp	1
+9	3d	lion_crushing_a_serpent/scene.gltf	4
+10	3d	louis_xiv_de_france_louvre_paris/scene.gltf	7
+12	3d	old_rusty_car/scene.gltf	5
+13	3d	ship_in_a_bottle/scene.gltf	6
+11	3d	simple_asaro_head/scene.gltf	8
 \.
 
 
@@ -602,8 +607,13 @@ COPY public.media (id, type, url, product_id) FROM stdin;
 --
 
 COPY public.product (shop_id, id, name, description, price, created_at) FROM stdin;
-1	1	Tas yang Mantap	Tas yang dibuat oleh Hardwin Welly dengan premium quality	1000	2019-11-27 12:09:35
-1	2	Kursi Keren	Kursi yang dapat "But can you do this?"	2000	2019-11-27 19:12:59
+4	7	Patung Kaisar	Patung kaisar terkenal sebagai hiasan rumah.\n\nLorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.	12000	2019-11-28 09:04:36
+1	8	Patung Kepala	Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.	20000	2019-11-28 09:19:34
+1	1	Tas Tahan Lama	Tas yang dibuat oleh Hardwin Welly dengan premium quality\n\nLorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.	1000	2019-11-27 12:09:35
+1	2	Kursi Keren	Kursi yang dapat "But can you do this?"\n\nLorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.	2000	2019-11-27 19:12:59
+4	4	Patung Singa	 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.	15000	2019-11-28 09:01:06
+4	5	Mobil Antik	Mobil antik kuno dari jaman 19-an\n\nLorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.	10000	2019-11-28 09:02:35
+4	6	Kapal dalam Botol	Miniatur kapal dalam botol sebagai hiasan\n\nLorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.	5000	2019-11-28 09:03:30
 \.
 
 
@@ -620,8 +630,8 @@ COPY public.reply (parent_discussion_id, children_discussion_id) FROM stdin;
 --
 
 COPY public.shop (user_email, name, id, business_legality_id, office_address, office_phone, website) FROM stdin;
-andra.antariksa@gmail.com	Andra Shop	1	\N	\N	\N	\N
-harwel@harwel.com	Harwel Shop	4	123	Test	14045	harwel.com
+andra.antariksa@gmail.com	Bengkel Kerajinan Andra	1	\N	\N	\N	\N
+harwel@harwel.com	Toko Harwel	4	123	Test	14045	harwel.com
 \.
 
 
@@ -639,6 +649,9 @@ COPY public.transaction (line_id, product_id) FROM stdin;
 
 COPY public.trolley (user_email, id, product_id, quantity) FROM stdin;
 andra.antariksa@gmail.com	2	1	5
+andra.antariksa@gmail.com	3	8	4
+andra.antariksa@gmail.com	4	5	3
+harwel@harwel.com	5	1	1
 \.
 
 
@@ -679,7 +692,7 @@ SELECT pg_catalog.setval('public.line_id_seq', 1, false);
 -- Name: media_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.media_id_seq', 3, true);
+SELECT pg_catalog.setval('public.media_id_seq', 15, true);
 
 
 --
@@ -693,7 +706,7 @@ SELECT pg_catalog.setval('public.media_product_id_seq', 1, true);
 -- Name: product_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.product_id_seq', 1, false);
+SELECT pg_catalog.setval('public.product_id_seq', 8, true);
 
 
 --
@@ -742,7 +755,7 @@ SELECT pg_catalog.setval('public.transaction_product_id_seq', 1, false);
 -- Name: trolley_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.trolley_id_seq', 2, true);
+SELECT pg_catalog.setval('public.trolley_id_seq', 5, true);
 
 
 --
