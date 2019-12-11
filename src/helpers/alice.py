@@ -1,7 +1,7 @@
 import os
 
 
-class Meshroom():
+class Meshroom:
     def __init__(self, input_dir, output_dir):
         self.input_dir = input_dir
         self.output_dir = output_dir

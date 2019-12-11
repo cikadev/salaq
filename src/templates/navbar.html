@@ -16,11 +16,16 @@
         <a class="navbar-item" href="/">
           Home
         </a>
-
+        <a class="navbar-item" href="/convert">
+          Convert to 3D
+        </a>
         {% if current_user.email %}
+          <a class="navbar-item" href="/transaction">
+            Transaction
+          </a>
           {% if current_user.shop %}
-            <a class="navbar-item" href="/@{{ current_user.shop.id }}">
-              My Shop
+            <a class="navbar-item" href="/@{{ current_user.shop.id }}/order">
+              Order
             </a>
           {% else %}
             <a class="navbar-item" href="/shop/create">

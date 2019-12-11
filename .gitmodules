@@ -1,0 +1,3 @@
+[submodule "meshroom"]
+	path = meshroom
+	url = https://github.com/alicevision/meshroom.git

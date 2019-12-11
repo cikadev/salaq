@@ -10,11 +10,11 @@
     <script>
         const product_id = "{{ product.id }}";
     </script>
-
     <div class="columns">
         <div class="column is-half" style="padding: 50px;">
             {% if is_mine %}
             <button class="button is-primary" id="button-settings">Product Settings</button>
+            <button class="button is-danger" id="button-remove">Remove Product</button>
             <div class="modal" id="modal-settings">
                 <div class="modal-background"></div>
                 <div class="modal-card">
@@ -23,7 +23,7 @@
                         <button aria-label="close" class="delete"></button>
                     </header>
                     <section class="modal-card-body">
-                        {% include "managemedia.html" %}
+                        {% include "product-setting.html" %}
                     </section>
                     <footer class="modal-card-foot">
                     </footer>
@@ -33,22 +33,22 @@
             <nav class="panel">
                 <p class="panel-tabs">
                     {% if media_3d|length > 0 %}
-                        <a class="is-active" id="nav-media-3d">3D Object</a>
+                    <a class="is-active" id="nav-media-3d">3D Object</a>
                     {% endif %}
                     {% if media_images|length > 0 %}
-                        <a id="nav-media-images" {% if media_3d|length == 0 %}class="is-active"{% endif %}>Images</a>
+                    <a id="nav-media-images" {% if media_3d|length== 0 %}class="is-active" {% endif %}>Images</a>
                     {% endif %}
                 </p>
                 <div id="nav-container-media-3d" style="width:100%; height: auto;">
                     {% for model in media_3d %}
                     <model-viewer auto-rotate background-color="#455A64" camera-controls
                                   src="/dynamic/{{ model.type }}/{{ model.url }}"></model-viewer>
-                    <a class="button is-default"
+                    <a class="button is-info"
                        href="intent://localhost:5000/dynamic/{{ model.type }}/{{ model.url }}#Intent;scheme=https;package=com.google.ar.core;action=android.intent.action.VIEW;S.browser_fallback_url=https://developers.google.com/ar;S.mode=ar_only;end;">AR
                         View</a>
                     {% endfor %}
                 </div>
-                <div class="is-hidden" id="nav-container-media-images" {% if media_3d|length > 0 %}
+                <div class="is-hidden" id="nav-container-media-images" {% if media_3d|length> 0 %}
                     class="is-invisible"
                     {% endif %}
                     style="width:100%; height: auto;">
@@ -87,9 +87,6 @@
                           height: 0px;
                           max-height: 0px;
                         }
-
-
-
                 </style>
             </nav>
         </div>
@@ -99,7 +96,7 @@
             <h3 class="is-size-3">Rp. {{ "{0:,}".format(product.price|int) }},-</h3>
 
             {% autoescape false %}
-                <p style="margin-top: 20px; margin-bottom:20px;">{{ (product.description).replace('\n', '<br>') }}</p>
+            <p style="margin-top: 20px; margin-bottom:20px;">{{ (product.description).replace('\n', '<br>') }}</p>
             {% endautoescape %}
 
             {% if not is_mine %}
@@ -122,6 +119,21 @@
                         <button class="button is-danger" id="add-to-cart">Add to Cart</button>
                     </p>
                 </div>
+            </div>
+            <div class="modal" id="modal-item-added">
+              <div class="modal-background"></div>
+              <div class="modal-card">
+                <header class="modal-card-head">
+                  <p class="modal-card-title">Item added!</p>
+                  <button class="delete" aria-label="close"></button>
+                </header>
+                <section class="modal-card-body">
+                  A new item has been added to your Shopping Cart.
+                </section>
+                <footer class="modal-card-foot">
+                  <button class="button is-success" id="button-ok">OK</button>
+                </footer>
+              </div>
             </div>
             {% endif %}
         </div>
@@ -166,6 +178,18 @@
                 return Object.entries(string).map(([k, v]) => `${encodeURIComponent(k)}=${encodeURIComponent(v)}`).join('&');
             }
 
+            const modalItemAdded = document.querySelector("#modal-item-added");
+            const modalItemAddedBackground = document.querySelector("#modal-item-added > .modal-background");
+            const modalItemAddedButtonOk = document.querySelector("#modal-item-added > div #button-ok");
+
+            modalItemAddedBackground.addEventListener("click", () => {
+                modalItemAdded.classList.toggle("is-active");
+            });
+
+            modalItemAddedButtonOk.addEventListener("click", () => {
+                modalItemAdded.classList.toggle("is-active");
+            });
+
             document.querySelector("#add-to-cart").addEventListener("click", () => {
                 fetch("/api/me/trolley", {
                     method: "POST",
@@ -173,7 +197,6 @@
                       'Content-Type': 'application/x-www-form-urlencoded'
                     },
                     body: objectToURLEncode({
-                        email: user_email,
                         product_id,
                         quantity: quantityField.value,
                     }),
@@ -181,7 +204,7 @@
                 .then((data) => data.json())
                 .then((decoded_data) => {
                     if (decoded_data.success === true) {
-                        alert("Added");
+                        modalItemAdded.classList.toggle("is-active");
                         quantityField.value = 0;
                     } else {
                         alert("Error happened");
@@ -214,6 +237,7 @@
             draggable: false,
             swipe: false,
         });
+
     </script>
     <style>
         .slick-prev:before {
@@ -231,6 +255,7 @@
           line-height: 20px;
           color: #00d1b2;
         }
+
 
 
 

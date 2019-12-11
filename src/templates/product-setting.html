@@ -1,0 +1,150 @@
+<div class="columns is-multiline is-mobile">
+    <div class="column is-full">
+        <div class="field">
+            <label class="label">Product Name</label>
+            <div class="control">
+                <input class="input" type="text" id="product-setting-name" placeholder="Product name">
+            </div>
+        </div>
+        <div class="field">
+            <label class="label">Product Price</label>
+            <div class="control">
+                <input class="input" type="number" id="product-setting-price" placeholder="Product Price">
+            </div>
+        </div>
+        <div class="field">
+            <label class="label">Product Description</label>
+            <div class="control">
+                <textarea class="input" id="product-setting-description" style="height: 300px;"></textarea>
+            </div>
+        </div>
+        <div class="field">
+            <div class="is-pulled-right">
+                <button class="button is-danger" id="product-setting-update">Update</button>
+            </div>
+        </div>
+    </div>
+    <div class="column is-half">
+        <div class="card">
+            <div class="card-header-title is-centered">
+                3D Model
+            </div>
+            <div class="card-content">
+                <label class="label">Upload .zip atau .rar koleksi foto yang akan dijadikan 3D model</label>
+                <label class="label">Atau upload .zip atau .rar gtfl atau .glb jika sudah dalam 3D model</label>
+                <div class="file has-name">
+                    <label class="file-label">
+                        <input class="file-input" type="file" id="file-3d">
+                        <span class="file-cta">
+                        <span class="file-icon">
+                          <i class="fas fa-upload"></i>
+                        </span>
+                        <span class="file-label">
+                          Choose a file…
+                        </span>
+                      </span>
+                        <span class="file-name">
+                      </span>
+                    </label>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="column is-half">
+        <div class="card">
+            <div class="card-header-title is-centered">
+                Foto Produk
+            </div>
+            <div class="card-content">
+                <label class="label">Upload berkas foto produk</label>
+                <div class="file has-name">
+                    <label class="file-label">
+                        <input class="file-input" type="file" id="file-images">
+                        <span class="file-cta">
+                        <span class="file-icon">
+                          <i class="fas fa-upload"></i>
+                        </span>
+                        <span class="file-label">
+                          Choose a file…
+                        </span>
+                      </span>
+                        <span class="file-name">
+                      </span>
+                    </label>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    function objectToURLParams(obj) {
+        let str = "";
+        for (var key in obj) {
+            if (str != "") {
+                str += "&";
+            }
+            str += key + "=" + encodeURIComponent(obj[key]);
+        }
+        return str;
+    }
+
+    document.querySelector("#product-setting-update").addEventListener("click", () => {
+        let data = {
+            description: document.querySelector("#product-setting-description").value,
+            price: document.querySelector("#product-setting-price").value,
+            name: document.querySelector("#product-setting-name").value,
+        };
+
+        fetch(`/api/@${shop_id}/${product_id}/update`, {
+            method: "POST",
+            headers: {
+              'Content-Type': 'application/x-www-form-urlencoded'
+            },
+            body: objectToURLParams(data),
+        })
+        .then((data) => data.json())
+        .then((decoded_data) => {
+            if (decoded_data.success === true) {
+                window.location.replace("");
+            } else {
+                alert(`Error happened: ${decoded_data.message}`);
+            }
+        })
+    });
+
+    document.querySelector("#file-images").addEventListener("change", () => {
+        let formData = new FormData();
+        formData.append('image', document.querySelector("#file-images").files[0]);
+
+        fetch(`/api/@${shop_id}/${product_id}/media/image/add`, {
+            method: "POST",
+            body: formData,
+        })
+        .then((data) => data.json())
+        .then((decoded_data) => {
+            if (decoded_data.success === true) {
+                window.location.replace("");
+            } else {
+                alert(`Error happened: ${decoded_data.message}`);
+            }
+        })
+    });
+
+    document.querySelector("#file-3d").addEventListener("change", () => {
+        let formData = new FormData();
+        formData.append('image', document.querySelector("#file-3d").files[0]);
+
+        fetch(`/api/@${shop_id}/${product_id}/media/3d/add`, {
+            method: "POST",
+            body: formData,
+        })
+        .then((data) => data.json())
+        .then((decoded_data) => {
+            if (decoded_data.success === true) {
+                window.location.replace("");
+            } else {
+                alert(`Error happened: ${decoded_data.message}`);
+            }
+        })
+    });
+</script>

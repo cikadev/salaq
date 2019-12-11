@@ -1,0 +1,246 @@
+{% extends "layout.html" %}
+{% block body %}
+<container>
+    <div class="columns is-centered">
+        <div class="column is-half" id="checkout-invoice">
+            <h2 class="is-size-2">Checkout — Invoice</h2>
+            <div>
+                <table class="table is-fullwidth">
+                    <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Quantity</th>
+                        <th>Price</th>
+                        <th>Total Price</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for trolley_key, trolley_value in trolley.items() %}
+                        <tr>
+                            <td>{{ trolley_value["id"] }}</td>
+                            <td>{{ trolley_value["name"] }}</td>
+                            <td>{{ trolley_value["quantity"] }}</td>
+                            <td>Rp. {{ trolley_value["price"] }}</td>
+                            <td>Rp, {{ trolley_value["quantity"] * trolley_value["price"] }}</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <div class="is-pulled-left">
+                <small>Total Price</small>
+                <h3 class="is-size-3">Rp. {{ total_price }}</h3>
+            </div>
+            <div class="is-pulled-right">
+                <button class="button is-primary" id="button-checkout-invoice-next">Next</button>
+            </div>
+        </div>
+        <div class="column is-half is-hidden" id="checkout-information">
+            <h2 class="is-size-2">Checkout — Information</h2>
+            <div>
+<!--                <div class="field">-->
+<!--                  <label class="label">Username</label>-->
+<!--                  <div class="control has-icons-left has-icons-right">-->
+<!--                    <input class="input is-success" type="text" placeholder="Text input" value="bulma">-->
+<!--                    <span class="icon is-small is-left">-->
+<!--                      <i class="fas fa-user"></i>-->
+<!--                    </span>-->
+<!--                    <span class="icon is-small is-right">-->
+<!--                      <i class="fas fa-check"></i>-->
+<!--                    </span>-->
+<!--                  </div>-->
+<!--                  <p class="help is-success">This username is available</p>-->
+<!--                </div>-->
+
+
+                <div class="field">
+                  <label class="label">Ship Address</label>
+                  <div class="control">
+                    <textarea class="textarea" placeholder="Ship Address" id="field-ship-address"></textarea>
+                  </div>
+                </div>
+
+                <div class="field">
+                  <label class="label">Postal Code</label>
+                  <div class="control">
+                    <input class="input" type="text" placeholder="Postal Code" id="field-postal-code" />
+                  </div>
+                </div>
+
+                <div class="field">
+                  <label class="label">Note</label>
+                  <div class="control">
+                    <textarea class="textarea" placeholder="Note" id="field-note"></textarea>
+                  </div>
+                </div>
+
+                <div class="field">
+                  <label class="label">Courrier Type</label>
+                  <div class="control">
+                      <div class="select">
+                          <select id="field-courrier-type">
+                              <option value="JNE">JNE</option>
+                          </select>
+                      </div>
+                  </div>
+                </div>
+
+                <div class="field">
+                      By order, I agree to the <a href="#">terms and conditions</a>
+                </div>
+            </div>
+            <div class="is-pulled-left">
+                <button class="button is-danger" id="button-checkout-back">Back</button>
+            </div>
+            <div class="is-pulled-right">
+                <button class="button is-primary" id="button-checkout-confirm">Confirm Order</button>
+            </div>
+        </div>
+        <div class="column is-half is-hidden" id="checkout-end">
+            <h2 class="is-size-2">Thank you for your order</h2>
+        </div>
+    </div>
+</container>
+<script type="text/javascript">
+    const checkoutInvoicePage = document.querySelector("#checkout-invoice");
+    const checkoutInformationPage = document.querySelector("#checkout-information");
+    const checkoutEndPage = document.querySelector("#checkout-end");
+
+    const fieldShipAddress = document.querySelector("#field-ship-address");
+    const fieldPostalCode = document.querySelector("#field-postal-code");
+    const fieldNote = document.querySelector("#field-note");
+    const fieldCourrierType = document.querySelector("#field-courrier-type");
+
+    checkoutInvoicePage.addEventListener("click", () => {
+        checkoutInvoicePage.classList.toggle("is-hidden");
+        checkoutInformationPage.classList.toggle("is-hidden");
+    });
+
+    document.querySelec{% for transaction in order %}
+        <div class="column is-4">
+            <div class="card">
+                <div class="card-content">
+                    <h3 class="is-size-3">
+                        Line #{{ transaction.id }}
+                    </h3>
+                    <p class="has-text-weight-bold">
+                        Address
+                    </p>
+                    <p>
+                        {{ line["line"].ship_address }}
+                    </p>
+                    <p class="has-text-weight-bold">
+                        Postal Code
+                    </p>
+                    <p>
+                        {{ line["line"].postal_code }}
+                    </p>
+                    {% if line["line"].note != "" %}
+                    <p class="has-text-weight-bold">
+                        Note
+                    </p>
+                    <p>
+                        {{ line["line"].note }}
+                    </p>
+                    {% endif %}
+                    <p class="has-text-weight-bold">
+                        Transaction Date
+                    </p>
+                    <p>
+                        {{ line["line"].date }}
+                    </p>
+                </div>
+                <footer class="card-footer">
+                    <a class="card-footer-item" id="card-transaction-item-list-{{ line["line"].id }}">
+                        Item List
+                    </a>
+                </footer>
+                <div class="modal" id="modal-{{ line["line"].id }}">
+                  <div class="modal-background"></div>
+                  <div class="modal-card">
+                    <header class="modal-card-head">
+                      <p class="modal-card-title">Transaction #{{ line["line"].id }} Item List</p>
+                      <button class="delete" aria-label="close"></button>
+                    </header>
+                    <section class="modal-card-body">
+                        <div>
+                            <table class="table is-fullwidth">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Name</th>
+                                        <th>Quantity</th>
+                                        <th>Price</th>
+                                        <th>Total Price</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                {% for transaction in line["transactions"] %}
+                                    <tr>
+                                        <td>{{ transaction["product"].id }}</td>
+                                        <td>{{ transaction["product"].name }}</td>
+                                        <td>{{ transaction["transaction"].quantity }}</td>
+                                        <td>Rp. {{ transaction["product"].price }}</td>
+                                        <td>Rp. {{ transaction["transaction"].quantity * transaction["product"].price }}</td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="is-pulled-left">
+                            <small>Total Price</small>
+                            <h3 class="is-size-3">Rp. {{ line["total_price"] }}</h3>
+                        </div>
+                    </section>
+                  </div>
+                </div>
+                <script type="text/javascript">
+                    const modal{{ line["line"].id }} = document.querySelector("#modal-{{ line["line"].id }}");
+                    const modal{{ line["line"].id }}Background = document.querySelector("#modal-{{ line["line"].id }} > .modal-background");
+                    const cardTransactionItemList{{ line["line"].id }} = document.querySelector("#card-transaction-item-list-{{ line["line"].id }}");
+                    cardTransactionItemList{{ line["line"].id }}.addEventListener("click", () => {
+                        modal{{ line["line"].id }}.classList.toggle("is-active");
+                    });
+
+                    modal{{ line["line"].id }}Background.addEventListener("click", () => {
+                        modal{{ line["line"].id }}.classList.toggle("is-active");
+                    });
+                </script>
+            </div>
+        </div>
+        {% endfor %}tor("#button-checkout-back").addEventListener("click", () => {
+        checkoutInvoicePage.classList.toggle("is-hidden");
+        checkoutInformationPage.classList.toggle("is-hidden");
+    });
+
+    document.querySelector("#button-checkout-confirm").addEventListener("click", () => {
+        const data = {
+            courrier_type: fieldCourrierType.value,
+            ship_address: fieldShipAddress.value,
+            note: fieldNote.value,
+            postal_code: fieldPostalCode.value,
+        };
+
+        fetch("/api/purchase", {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data),
+        })
+        .then((data) => data.json()
+            .then((json) => {
+                if (json.success === false)
+                {
+                    alert("Error");
+                    return;
+                }
+                checkoutEndPage.classList.toggle("is-hidden");
+                checkoutInformationPage.classList.toggle("is-hidden");
+            })
+        );
+    });
+
+</script>
+{% endblock %}

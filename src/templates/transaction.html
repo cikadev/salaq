@@ -1,0 +1,104 @@
+{% extends "layout.html" %}
+{% block body %}
+<div class="container">
+    <h2 class="is-size-2">Transaction</h2>
+    <div class="columns is-multiline">
+        {% for line in lines %}
+        <div class="column is-4">
+            <div class="card">
+                <div class="card-content">
+                    <h3 class="is-size-3">
+                        Transaction #{{ line["line"].id }} {{ line["progress"] }}
+                    </h3>
+                    <p class="has-text-weight-bold">
+                        Address
+                    </p>
+                    <p>
+                        {{ line["line"].ship_address }}
+                    </p>
+                    <p class="has-text-weight-bold">
+                        Postal Code
+                    </p>
+                    <p>
+                        {{ line["line"].postal_code }}
+                    </p>
+                    {% if line["line"].note != "" %}
+                    <p class="has-text-weight-bold">
+                        Note
+                    </p>
+                    <p>
+                        {{ line["line"].note }}
+                    </p>
+                    {% endif %}
+                    <p class="has-text-weight-bold">
+                        Transaction Date
+                    </p>
+                    <p>
+                        {{ line["line"].date }}
+                    </p>
+                </div>
+                <footer class="card-footer">
+                    <a class="card-footer-item" id="card-transaction-item-list-{{ line["line"].id }}">
+                        Item List
+                    </a>
+                    <a class="card-footer-item" href="/download/invoice/{{ line["line"].id }}">
+                        Download Invoice
+                    </a>
+                </footer>
+                <div class="modal" id="modal-{{ line["line"].id }}">
+                  <div class="modal-background"></div>
+                  <div class="modal-card">
+                    <header class="modal-card-head">
+                      <p class="modal-card-title">Transaction #{{ line["line"].id }} Item List</p>
+                      <button class="delete" aria-label="close"></button>
+                    </header>
+                    <section class="modal-card-body">
+                        <div>
+                            <table class="table is-fullwidth">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Name</th>
+                                        <th>Quantity</th>
+                                        <th>Price</th>
+                                        <th>Total Price</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                {% for transaction in line["transactions"] %}
+                                    <tr>
+                                        <td>{{ transaction["product"].id }}</td>
+                                        <td>{{ transaction["product"].name }}</td>
+                                        <td>{{ transaction["transaction"].quantity }}</td>
+                                        <td>Rp. {{ transaction["product"].price }}</td>
+                                        <td>Rp. {{ transaction["transaction"].quantity * transaction["product"].price }}</td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="is-pulled-left">
+                            <small>Total Price</small>
+                            <h3 class="is-size-3">Rp. {{ line["total_price"] }}</h3>
+                        </div>
+                    </section>
+                  </div>
+                </div>
+                <script type="text/javascript">
+                    const modal{{ line["line"].id }} = document.querySelector("#modal-{{ line["line"].id }}");
+                    const modal{{ line["line"].id }}Background = document.querySelector("#modal-{{ line["line"].id }} > .modal-background");
+                    const cardTransactionItemList{{ line["line"].id }} = document.querySelector("#card-transaction-item-list-{{ line["line"].id }}");
+                    cardTransactionItemList{{ line["line"].id }}.addEventListener("click", () => {
+                        modal{{ line["line"].id }}.classList.toggle("is-active");
+                    });
+
+                    modal{{ line["line"].id }}Background.addEventListener("click", () => {
+                        modal{{ line["line"].id }}.classList.toggle("is-active");
+                    });
+                </script>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

@@ -11,6 +11,9 @@ flask-login = "*"
 sqlalchemy = "*"
 psycopg2 = "*"
 flask-sqlalchemy = "*"
+flask-migrate = "*"
+opencv-python = "*"
+pdfkit = "*"
 
 [requires]
 python_version = "3.8"

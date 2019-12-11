@@ -5,7 +5,7 @@
         {% if is_mine %}
             <a href="/@{{ shop.id }}/product/add" class="button">Add product</a>
         {% endif %}
-        <div class="columns">
+        <div class="columns is-multiline">
             {% for product, product_thumbnail in product_list_and_media %}
                 <div class="column is-4">
                     <div class="card">
@@ -26,14 +26,12 @@
                           </div>
                           <div class="media-content">
                             <p class="title is-4">{{ product.name }}</p>
-                            <p class="subtitle is-6">Rp. {{ product.price }}</p>
+                              <p class="subtitle is-6">Oleh <a href="/@{{ shop.id }}">{{ shop.name }}</a></p>
                           </div>
                         </div>
 
                         <div class="content">
-                          <p>
-                              <time datetime="2016-1-1">{{ product.created_at }}</time>
-                          </p>
+                            <h4 class="is-size-43">Rp. {{ product.price }}</h4>
                         </div>
                         </a>
                       </div>

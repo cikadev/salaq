@@ -1,5 +1,6 @@
 from src import db
 from src.models.product import Product
+from src.models.transaction import Transaction
 
 
 class Shop(db.Model):
@@ -31,3 +32,9 @@ class Shop(db.Model):
     @staticmethod
     def where_user_email(user_email):
         return Shop.query.filter_by(user_email=user_email).first()
+
+    def get_order(self):
+        product_id_list = list(map(lambda product: product.id, self.get_products()))
+        #print(product_id_list)
+        return list(filter(lambda transaction: transaction.product_id in product_id_list
+                           and transaction.is_done is False, Transaction.all()))
