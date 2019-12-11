@@ -23,4 +23,4 @@ class VideoProcessing:
             sec = round(sec, 2)
 
     def meshroom(self, input="", output=""):
-        return os.system(f"./Meshroom-2019.2.0/meshroom_photogrammetry --input {input} --output {output}")
+        return os.system(f"./meshroom/meshroom_photogrammetry --input {input} --output {output}")
